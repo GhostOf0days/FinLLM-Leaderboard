@@ -1,0 +1,261 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Obtaining DeepSeek API Key &mdash; OpenFinLLM Leaderboard Documentation 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=e8ce10b2" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Get Model API keys" href="get_api_keys.html" />
+    <link rel="prev" title="Install Cuda" href="install_cuda.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenFinLLM Leaderboard Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">OpenFinLLM Leaderboard Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/index.html">Datasets</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Basic and Setup</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="install_cuda.html">Install Cuda</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Obtaining DeepSeek API Key</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-access-api-key-section">Step 1: Access API Key Section</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-generate-new-api-key">Step 2: Generate New API Key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#verification">Verification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#security-notes">Security Notes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="get_api_keys.html">Get Model API keys</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use_cases/index.html">Use Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap/index.html">Road Map</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenFinLLM Leaderboard Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Basic and Setup</a></li>
+      <li class="breadcrumb-item active">Obtaining DeepSeek API Key</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/Open-Finance-Lab/FinLLM-Leaderboard/blob/main/docs/source/basics_setup/deepseek_api.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="obtaining-deepseek-api-key">
+<span id="deepseek-api-setup"></span><h1>Obtaining DeepSeek API Key<a class="headerlink" href="#obtaining-deepseek-api-key" title="Link to this heading"></a></h1>
+<nav class="contents local" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id3">Overview</a></p></li>
+<li><p><a class="reference internal" href="#prerequisites" id="id4">Prerequisites</a></p></li>
+<li><p><a class="reference internal" href="#step-1-access-api-key-section" id="id5">Step 1: Access API Key Section</a></p></li>
+<li><p><a class="reference internal" href="#step-2-generate-new-api-key" id="id6">Step 2: Generate New API Key</a></p></li>
+<li><p><a class="reference internal" href="#verification" id="id7">Verification</a></p></li>
+<li><p><a class="reference internal" href="#troubleshooting" id="id8">Troubleshooting</a></p></li>
+<li><p><a class="reference internal" href="#security-notes" id="id9">Security Notes</a></p></li>
+<li><p><a class="reference internal" href="#additional-resources" id="id10">Additional Resources</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Overview</a><a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This guide walks through the process of obtaining and configuring your DeepSeek API key for integration with third-party applications.</p>
+</section>
+<section id="prerequisites">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Prerequisites</a><a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Active DeepSeek account (register at <a class="reference external" href="https://www.deepseek.com/en">https://www.deepseek.com/en</a>)</p></li>
+</ul>
+</section>
+<section id="step-1-access-api-key-section">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Step 1: Access API Key Section</a><a class="headerlink" href="#step-1-access-api-key-section" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Navigate to the DeepSeek portal: <a class="reference external" href="https://www.deepseek.com/en">https://www.deepseek.com/en</a></p></li>
+<li><p>Click API Platform</p></li>
+<li><p>Login to your account</p></li>
+</ol>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/deepseek_api_platform.png"><img alt="../_images/deepseek_api_platform.png" src="../_images/deepseek_api_platform.png" style="width: 100%;" />
+</a>
+</figure>
+</section>
+<section id="step-2-generate-new-api-key">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Step 2: Generate New API Key</a><a class="headerlink" href="#step-2-generate-new-api-key" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>In the left sidebar, click “API Keys”</p></li>
+<li><p>Select “Create new API Key”</p></li>
+<li><p>In the dialog:
+- Enter a name
+- Click “Create API key”</p></li>
+</ol>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/deepseek_api_create.png"><img alt="../_images/deepseek_api_create.png" src="../_images/deepseek_api_create.png" style="width: 100%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">API key generation interface</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="verification">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Verification</a><a class="headerlink" href="#verification" title="Link to this heading"></a></h2>
+<p>To verify successful integration:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>https://api.deepseek.com/chat/completions<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;DeepSeek API Key&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<span class="s1">        &quot;model&quot;: &quot;deepseek-chat&quot;,</span>
+<span class="s1">        &quot;messages&quot;: [</span>
+<span class="s1">          {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;You are a helpful assistant.&quot;},</span>
+<span class="s1">          {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Hello!&quot;}</span>
+<span class="s1">        ],</span>
+<span class="s1">        &quot;stream&quot;: false</span>
+<span class="s1">      }&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Please install OpenAI SDK first: `pip3 install openai`</span>
+
+<span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;sk-api here&quot;</span><span class="p">,</span> <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.deepseek.com&quot;</span><span class="p">)</span>
+
+<span class="c1"># DeepseekV3: deepseek-chat  DeepseekR1: deepseek-reasoner</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="s2">&quot;deepseek-reasoner&quot;</span><span class="p">,</span>
+    <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a helpful assistant&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello&quot;</span><span class="p">},</span>
+    <span class="p">],</span>
+    <span class="n">stream</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="troubleshooting">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">Troubleshooting</a><a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">Common Issues</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Symptom</p></th>
+<th class="head"><p>Solution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>“Invalid API Key”</p></td>
+<td><p>Regenerate key and re-configure</p></td>
+</tr>
+<tr class="row-odd"><td><p>Rate limiting</p></td>
+<td><p>Check quota at DeepSeek portal</p></td>
+</tr>
+<tr class="row-even"><td><p>Connection timeout</p></td>
+<td><p>Verify network restrictions</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="security-notes">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">Security Notes</a><a class="headerlink" href="#security-notes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Store keys in secure password managers</p></li>
+<li><p>Never commit keys to version control</p></li>
+<li><p>Rotate keys quarterly</p></li>
+<li><p>Restrict keys by IP when possible</p></li>
+</ul>
+</section>
+<section id="additional-resources">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">Additional Resources</a><a class="headerlink" href="#additional-resources" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://api-docs.deepseek.com/">DeepSeek API Documentation</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install_cuda.html" class="btn btn-neutral float-left" title="Install Cuda" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="get_api_keys.html" class="btn btn-neutral float-right" title="Get Model API keys" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, OpenFinLLM Leaderboard.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

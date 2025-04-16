@@ -1,0 +1,321 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benchmark DeepSeek on Financial Tasks &mdash; OpenFinLLM Leaderboard Documentation 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=e8ce10b2" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Benchmark Llama-3.1 on Financial Tasks (zeroshot)" href="benchmark_zeroshot_guide.html" />
+    <link rel="prev" title="Tutorials" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenFinLLM Leaderboard Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">OpenFinLLM Leaderboard Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../user/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/index.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basics_setup/index.html">Basic and Setup</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Benchmark DeepSeek on Financial Tasks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tutorial">Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-the-tutorial">Running the Tutorial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notes">Notes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#additional-resources">Additional Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="benchmark_zeroshot_guide.html">Benchmark Llama-3.1 on Financial Tasks (zeroshot)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchmark_zeroshot_api_guide.html">Benchmark ChatGPT on Financial Tasks (zeroshot)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evaluation_framework.html">Evaluate Deepseek using Framework</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../use_cases/index.html">Use Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap/index.html">Road Map</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenFinLLM Leaderboard Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Tutorials</a></li>
+      <li class="breadcrumb-item active">Benchmark DeepSeek on Financial Tasks</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/Open-Finance-Lab/FinLLM-Leaderboard/blob/main/docs/source/tutorials/benchmark_deepseek_zeroshot_guide.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="benchmark-deepseek-on-financial-tasks">
+<span id="deepseek-zero-shot"></span><h1>Benchmark DeepSeek on Financial Tasks<a class="headerlink" href="#benchmark-deepseek-on-financial-tasks" title="Link to this heading"></a></h1>
+<p>This guide demonstrates how to benchmark DeepSeek models in a <strong>Zero-Shot</strong> setting using their API:</p>
+<ol class="arabic simple">
+<li><p><strong>Configure</strong> API access</p></li>
+<li><p><strong>Prompt</strong> the model with financial sentiment analysis questions</p></li>
+<li><p><strong>Evaluate</strong> accuracy against the FLARE-FIQASA dataset</p></li>
+</ol>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p><strong>DeepSeek API Key</strong>:
+- Follow <a class="reference internal" href="../basics_setup/deepseek_api.html#deepseek-api-setup"><span class="std std-ref">Obtaining DeepSeek API Key</span></a> to obtain credentials</p></li>
+<li><p>Dataset structure <code class="docutils literal notranslate"><span class="pre">flare-fiqasa</span></code> <a class="reference external" href="https://huggingface.co/datasets/ChanceFocus/flare-fiqasa">https://huggingface.co/datasets/ChanceFocus/flare-fiqasa</a>:</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-number">Table 2 </span><span class="caption-text">Example Dataset Entry</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>text</p></th>
+<th class="head"><p>choices</p></th>
+<th class="head"><p>gold</p></th>
+<th class="head"><p>answer</p></th>
+<th class="head"><p>id</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>“Whats up with $LULU? Numbers looked good…”</p></td>
+<td><p>[“negative”, “positive”, “neutral”]</p></td>
+<td><p>2</p></td>
+<td><p>“neutral”</p></td>
+<td><p>“fiqasa0”</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p>Install dependencies:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>openai<span class="w"> </span>datasets<span class="w"> </span>evaluate<span class="w"> </span>tqdm
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="tutorial">
+<h2>Tutorial<a class="headerlink" href="#tutorial" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Import Libraries</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="kn">import</span> <span class="nn">evaluate</span>
+<span class="kn">from</span> <span class="nn">tqdm.auto</span> <span class="kn">import</span> <span class="n">tqdm</span>
+</pre></div>
+</div>
+</li>
+<li><p>Configuration Setup</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># API configuration</span>
+<span class="n">API_KEY</span> <span class="o">=</span> <span class="s2">&quot;your_deepseek_api_key&quot;</span>  <span class="c1"># Replace with actual key</span>
+<span class="n">MODEL_NAME</span> <span class="o">=</span> <span class="s2">&quot;deepseek-chat&quot;</span>  <span class="c1"># Alternatives: deepseek-reasoner</span>
+<span class="n">DATASET_NAME</span> <span class="o">=</span> <span class="s2">&quot;ChanceFocus/flare-fiqasa&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Initialize Client</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">initialize_client</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">OpenAI</span><span class="p">(</span>
+        <span class="n">api_key</span><span class="o">=</span><span class="n">API_KEY</span><span class="p">,</span>
+        <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.deepseek.com&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Zero-Shot Prompt Template</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">zero_shot_prompt</span><span class="p">(</span><span class="n">example</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Construct standardized zero-shot prompt&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Analyze the sentiment of this financial text. Respond ONLY with the label:</span>
+<span class="s2">Text: </span><span class="si">{</span><span class="n">example</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">Options: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">example</span><span class="p">[</span><span class="s1">&#39;choices&#39;</span><span class="p">])</span><span class="si">}</span>
+<span class="s2">Label:&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p>API Call Function</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_api_response</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">prompt</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get response from DeepSeek API&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">MODEL_NAME</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
+                <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;You are a financial analyst.&quot;</span><span class="p">},</span>
+                <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">prompt</span><span class="p">}</span>
+            <span class="p">],</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">max_tokens</span><span class="o">=</span><span class="mi">10</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;API Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Answer Validation</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">validate_response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">choices</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Match API response to valid choices&quot;&quot;&quot;</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">choices</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">choice</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</li>
+<li><p>Evaluation Function</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evaluate_model</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">dataset_split</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run evaluation with progress tracking&quot;&quot;&quot;</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">evaluate</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;accuracy&quot;</span><span class="p">)</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">references</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">progress_bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">num_samples</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Evaluating&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span><span class="p">):</span>
+        <span class="n">ex</span> <span class="o">=</span> <span class="n">dataset_split</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="n">zero_shot_prompt</span><span class="p">(</span><span class="n">ex</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">get_api_response</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">prompt</span><span class="p">)</span>
+        <span class="n">pred_label</span> <span class="o">=</span> <span class="n">validate_response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">ex</span><span class="p">[</span><span class="s1">&#39;choices&#39;</span><span class="p">])</span>
+        <span class="n">gold_label</span> <span class="o">=</span> <span class="n">ex</span><span class="p">[</span><span class="s1">&#39;choices&#39;</span><span class="p">][</span><span class="n">ex</span><span class="p">[</span><span class="s1">&#39;gold&#39;</span><span class="p">]]</span>
+
+        <span class="n">predictions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ex</span><span class="p">[</span><span class="s1">&#39;choices&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">pred_label</span><span class="p">)</span> <span class="k">if</span> <span class="n">pred_label</span> <span class="ow">in</span> <span class="n">ex</span><span class="p">[</span><span class="s1">&#39;choices&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">references</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ex</span><span class="p">[</span><span class="s1">&#39;gold&#39;</span><span class="p">])</span>
+
+        <span class="n">progress_bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">current_acc</span> <span class="o">=</span> <span class="n">accuracy</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">,</span> <span class="n">references</span><span class="o">=</span><span class="n">references</span><span class="p">)[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span>
+        <span class="n">progress_bar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">({</span><span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_acc</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">})</span>
+
+    <span class="n">progress_bar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">accuracy</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">predictions</span><span class="o">=</span><span class="n">predictions</span><span class="p">,</span> <span class="n">references</span><span class="o">=</span><span class="n">references</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Main Execution</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">initialize_client</span><span class="p">()</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="n">DATASET_NAME</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">evaluate_model</span><span class="p">(</span>
+        <span class="n">client</span><span class="p">,</span>
+        <span class="n">dataset</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">],</span>
+        <span class="n">num_samples</span><span class="o">=</span><span class="mi">10</span>
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Final Accuracy: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="running-the-tutorial">
+<h2>Running the Tutorial<a class="headerlink" href="#running-the-tutorial" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Replace <code class="docutils literal notranslate"><span class="pre">your_deepseek_api_key</span></code> with your actual API key</p></li>
+<li><p>Save code as <code class="docutils literal notranslate"><span class="pre">deepseek_zero_shot.py</span></code></p></li>
+<li><p>Run with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">deepseek_zero_shot.py</span></code></p></li>
+</ol>
+</section>
+<section id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Rate Limits</strong>: DeepSeek API has default 50 RPM limit</p></li>
+<li><dl class="simple">
+<dt><strong>Model Selection</strong>:</dt><dd><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">deepseek-chat</span></code> for general financial analysis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">deepseek-reasoner</span></code> for complex reasoning tasks</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>Prompt Design</strong>: Explicit instruction (“Respond ONLY with the label”) improves consistency</p></li>
+<li><p><strong>Error Handling</strong>: API calls include basic exception handling</p></li>
+</ul>
+</section>
+<section id="additional-resources">
+<h2>Additional Resources<a class="headerlink" href="#additional-resources" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://api.deepseek.com/docs">DeepSeek API Documentation</a></p></li>
+<li><p><a class="reference external" href="https://arxiv.org/abs/2308.00075">FLARE-FIQASA Dataset Paper</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="benchmark_zeroshot_guide.html" class="btn btn-neutral float-right" title="Benchmark Llama-3.1 on Financial Tasks (zeroshot)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, OpenFinLLM Leaderboard.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

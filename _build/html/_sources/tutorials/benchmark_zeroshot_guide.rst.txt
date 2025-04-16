@@ -1,0 +1,236 @@
+.. _zero_shot_llama:
+
+Benchmark Llama-3.1 on Financial Tasks (zeroshot)
+=============================================================
+
+.. contents:: Table of Contents
+   :local:
+
+Overview
+--------
+This guide shows how to benchmark Llama-3.1-1B model in a **Zero-Shot** setting:
+
+1. **Install** the necessary libraries
+2. **Load** model from Hugging Face
+3. **Prompt** the model in a zero-shot manner for each question in the dataset
+4. **Save** model outputs with accuracy scoring
+
+Prerequisites
+-------------
+
+1. **Hugging Face Access Token**:
+   - Create at `huggingface.co/settings/tokens <https://huggingface.co/settings/tokens>`_
+   - Request model access for `Llama-3.2-1B <https://huggingface.co/meta-llama/Llama-3.2-1B>`_
+
+2. Dataset structure ``flare-fiqasa`` `<https://huggingface.co/datasets/ChanceFocus/flare-fiqasa>`_:
+
+   .. list-table:: Example Dataset Entry
+      :header-rows: 1
+      :widths: 20 20 20 20 20
+
+      * - text
+        - choices
+        - gold
+        - answer
+        - id
+      * - "Whats up with $LULU? Numbers looked good..."
+        - ["negative", "positive", "neutral"]
+        - 2
+        - "neutral"
+        - "fiqasa0"
+
+3. Install dependencies:
+
+   .. code-block:: bash
+
+      pip install 'accelerate>=0.26.0' \
+                  transformers \
+                  datasets \
+                  evaluate \
+                  scikit-learn \
+                  tqdm \
+                  torch
+
+Tutorial
+--------
+
+1. Import Libraries
+
+   .. code-block:: python
+
+      import re
+      import threading
+      from datasets import load_dataset
+      from transformers import AutoTokenizer, AutoModelForCausalLM, TextIteratorStreamer
+      import evaluate
+      from tqdm.auto import tqdm
+
+.. note:: 
+    Imports the essential Python libraries used throughout the benchmarking process, including model loading, dataset handling, evaluation metrics, and multi-threaded streaming for real-time inference.
+2. Configuration Setup
+
+   .. code-block:: python
+
+      # Model and dataset configuration
+      MODEL_NAME = "meta-llama/Llama-3.2-1B"
+      DATASET_NAME = "ChanceFocus/flare-fiqasa"
+      ACCESS_TOKEN = "your_hf_token_here"  # Replace with your token
+
+.. note::
+    Define the model, dataset, and access credentials needed for loading and evaluating the LLaMA-3.2-1B model. Be sure to replace the access token with your own from Hugging Face to authenticate model access.
+3. Model Initialization
+
+   .. code-block:: python
+
+      def initialize_model():
+          print("Loading model...")
+          model = AutoModelForCausalLM.from_pretrained(
+              MODEL_NAME,
+              device_map="auto",
+              token=ACCESS_TOKEN,
+          )
+
+          print("\nLoading tokenizer...")
+          tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+          return model, tokenizer
+
+.. note::
+    This function loads the pre-trained LLaMA model and its corresponding tokenizer from Hugging Face using the specified model name and access token. The model is automatically mapped to the available device for efficient inference.
+4. Zero-Shot Prompt Template
+
+   .. code-block:: python
+
+      def zero_shot_prompt(example):
+          """Construct standardized zero-shot prompt"""
+          return f"""Analyze the sentiment of this financial text:
+      Text: {example['text']}
+      Options: {', '.join(example['choices'])}
+      Answer:"""
+
+.. note::
+    This function creates a simple prompt to ask the model to analyze the sentiment of financial text. It includes the text, possible answer choices, and a space for the model to give its prediction.
+
+5. Generation Function
+
+   .. code-block:: python
+
+      def generate_response(prompt, model, tokenizer, max_new_tokens=10):
+          """Generate response with progress tracking"""
+          inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
+          streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
+
+          generation_kwargs = dict(
+              input_ids=inputs.input_ids,
+              max_new_tokens=max_new_tokens,
+              streamer=streamer
+          )
+
+          thread = threading.Thread(target=model.generate, kwargs=generation_kwargs)
+          thread.start()
+
+          generated_text = ""
+          with tqdm(total=max_new_tokens, desc="Generating", unit="token") as pbar:
+              for new_text in streamer:
+                  generated_text += new_text
+                  pbar.update(1)
+          thread.join()
+          return generated_text
+
+.. note::
+    This function runs the model to generate a response from the prompt. It uses a progress bar to track token generation and runs the process in a separate thread for smoother output.
+6. Answer Extraction
+
+   .. code-block:: python
+
+      def extract_answer(response):
+          """Extract answer section from generated text"""
+          lower_response = response.lower()
+          answer_idx = lower_response.find("answer:")
+          if answer_idx == -1:
+              return ""
+
+          answer_section = response[answer_idx + len("answer:"):].strip()
+          explanation_idx = answer_section.lower().find("explanation:")
+          return answer_section[:explanation_idx].strip() if explanation_idx != -1 else answer_section
+
+      def match_label(answer_section, choices):
+          """Match extracted answer to valid choices"""
+          if not answer_section:
+              return None
+          for choice in choices:
+              if re.search(rf'\b{re.escape(choice)}\b', answer_section, re.IGNORECASE):
+                  return choice
+          return None
+
+.. note::
+    These functions pull out the model’s final answer from the generated text and match it to one of the valid choices. This helps evaluate whether the model's response aligns with the expected answer format.
+7. Evaluation Function
+
+   .. code-block:: python
+
+      def evaluate_model(model, tokenizer, dataset_split, num_samples=10):
+          """Run evaluation with progress tracking"""
+          accuracy = evaluate.load("accuracy")
+          predictions = []
+          references = []
+
+          progress_bar = tqdm(total=num_samples, desc="Evaluating")
+
+          for i in range(num_samples):
+              ex = dataset_split[i]
+              prompt = zero_shot_prompt(ex)
+              response = generate_response(prompt, model, tokenizer)
+
+              answer_section = extract_answer(response)
+              pred_label = match_label(answer_section, ex['choices']) or "unknown"
+              gold_label = ex['choices'][ex['gold']]
+
+              # Convert to indices
+              predictions.append(ex['choices'].index(pred_label) if pred_label in ex['choices'] else -1
+              references.append(ex['gold'])
+
+              progress_bar.update(1)
+              current_acc = accuracy.compute(predictions=predictions, references=references)['accuracy']
+              progress_bar.set_postfix({"accuracy": f"{current_acc:.2%}"})
+
+          progress_bar.close()
+          return accuracy.compute(predictions=predictions, references=references)
+
+.. note::
+    This function tests the model on a set of examples, compares its predictions to the correct answers, and tracks accuracy using a progress bar. It helps measure how well the model performs on the dataset.
+8. Main Execution
+
+   .. code-block:: python
+
+      if __name__ == "__main__":
+          # Initialize components
+          model, tokenizer = initialize_model()
+          dataset = load_dataset(DATASET_NAME)
+
+          # Run evaluation
+          results = evaluate_model(
+              model,
+              tokenizer,
+              dataset["test"],
+              num_samples=10
+          )
+
+          print(f"\nFinal Accuracy: {results['accuracy']:.2%}")
+
+.. note::
+    This is the main script that runs everything—loading the model and dataset, evaluating the model on test data, and printing the final accuracy. It ties all the previous steps together for a complete run.
+
+Running the Tutorial
+--------------------
+
+1. Replace ``your_hf_token_here`` with your actual Hugging Face token
+2. Ensure GPU availability for model inference
+3. Save code as ``llama_zero_shot.py``
+4. Run with ``python llama_zero_shot.py``
+
+Notes
+-----
+- **Zero-shot** approach uses direct prompting without examples
+- **max_new_tokens** controls response length (10 for single-word answers)
+- **answer:** prefix is critical for response parsing
+- Partial matching handles formatting variations in model outputs

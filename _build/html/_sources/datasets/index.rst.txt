@@ -7,6 +7,5 @@ Datasets
    :caption: Datasets
 
    fpb
-   headlines
 
 
