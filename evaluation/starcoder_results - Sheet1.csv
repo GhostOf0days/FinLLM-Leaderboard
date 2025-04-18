@@ -33,14 +33,14 @@ Headlines,avg_f1: 0.5995
 FOMC,acc: 0.3065 +- 0.0207; missing: 0.0040 +- 0.0028; f1: 0.2616; macro_f1: 0.2722; mcc: 0.0314
 ,
 ,
-FinArg-AUC,
-FinArg-ARC,
-MultiFin,
-MA,
-MLESG,
-FinQA,
-TATQA,
-Regulations,
+FinArg-AUC,acc: 0.0918 +- 0.0093; missing: 0.8184 +- 0.0124; f1: 0.1485; macro_f1: 0.1526; mcc: 0.0081
+FinArg-ARC,acc: 0.4348 +- 0.0189; missing: 0.0029 - 0.0020; f1: 0.4875; macro_f1: 0.3102; mcc: 0.0140
+MultiFin,acc: 0.3462 +- 0.0204; missing: 0.0165 +- 0.0055; f1: 0.2921; macro_f1: 0.2666; mcc: 0.2049
+MA,acc: 0.4880 +- 0.0224; missing: 0.0000 +- 0.0000; f1: 0.4403; macro_f1: 0.4403; mcc: -0.0296
+MLESG,acc: 0.1533 +- 0.0208; missing: 0.4567 +- 0.0288; f1: 0.1402; macro_f1: 0.0976; mcc: 0.1531
+FinQA,acc: 0 +- 0
+TATQA,acc: 0 +- 0
+Regulations,ERROR
 ConvFinQA,acc: 0 +- 0
 EDTSUM,rouge1: 0.1518; rouge2: 0.0692; rougeL: 0.1219; bert_score_f1: 0.5987
 ECTSUM,rouge1: 0; rouge2: 0; rougeL: 0; bert_score_f1: 0
