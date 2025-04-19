@@ -27,38 +27,38 @@ FiQA-SA,acc: 0.4170 ± 0.0322; missing: 0.1362 ± 0.0224; f1: 0.4518; macro_f1: 
 TSA,rmse: 0.6112; missing: 0.0000 ± 0
 ,
 ,
-Headlines,
+Headlines,Not Done Yet
 ,
 ,
-FOMC,
+FOMC,acc: 0.5161 ± 0.0225; missing: 0.0000 ± 0.0000; f1: 0.4968; macro_f1: 0.4491; mcc: 0.2110
 ,
 ,
-FinArg-AUC,
-FinArg-ARC,
-MultiFin,
-MA,
-MLESG,
-FinQA,
-TATQA,
+FinArg-AUC,acc: 0.5273 ± 0.016; missing: 0.0000 ± 0.000; f1: 0.3711; macro_f1: 0.3549; mcc: 0.0407
+FinArg-ARC,acc: 0.4652 ± 0.019; missing: 0.0000 ± 0.000; f1: 0.4564; macro_f1: 0.3120; mcc: 0.1774
+MultiFin,acc: 0.2949 ± 0.0195; missing: 0.0000 ± 0.0000; f1: 0.2380; macro_f1: 0.2476; mcc: 0.1774
+MA,acc: 0.3800 ± 0.0281; missing: 0.0200 ± 0.0081; f1: 0.3525; macro_f1: 0.3260; mcc: 0.3571
+MLESG,acc: 0.3800 ± 0.0281; missing: 0.0200 ± 0.0081; f1: 0.3525; macro_f1: 0.3260; mcc: 0.3571
+FinQA,acc: 0 ± 0
+TATQA,acc: 0 ± 0
 Regulations,Not Done Yet
-ConvFinQA,
-EDTSUM,
-ECTSUM,
-BigData22,
-ACL18,
-CIKM18,
-German,
-Australian,
-LendingClub,
-ccf,
-ccfraud,
-polish,
-taiwan,
-portoseguro,
-travelinsurance,
-ES_FinanceES,
-ES_Multifin,
-ES_EFP,
-ES_EFPA,
-ES_FNS,
-ES_TSA,
+ConvFinQA,acc: 0 ± 0
+EDTSUM,rouge1: 0.2151; rouge2: 0.0941; rougeL: 0.1640; bert_score_f1: 0.6620
+ECTSUM,rouge1: 0; rouge2: 0; rougeL: 0; bert_score_f1: 0
+BigData22,acc: 0.5571 ± 0.013; missing: 0.0000 ± 0.000; f1: 0.5078; macro_f1: 0.4882; mcc: 0.0625
+ACL18,acc: 0.5118 ± 0.0082; missing: 0.0000 ± 0.0000; f1: 0.4268; macro_f1: 0.4209; mcc: 0.0060
+CIKM18,acc: 0.5792 ± 0.0146; missing: 0.0000 ± 0.0000; f1: 0.4754; macro_f1: 0.4277; mcc: 0.0367
+German,acc: 0.5700 ± 0.0351; missing: 0.0000 ± 0.0000; f1: 0.5418; macro_f1: 0.4668; mcc: -0.0499
+Australian,acc: 0.4388 ± 0.0422; missing: 0.0000 ± 0.0000; f1: 0.4208; macro_f1: 0.4303; mcc: -0.0766
+LendingClub,acc: 0.8027 ± 0.0077; missing: 0.0000 ± 0.0000; f1: 0.7638; macro_f1: 0.5666; mcc: 0.1875  
+ccf,acc: 0.9987 ± 0.0008; missing: 0.0000 ± 0.0000; f1: 0.9980; macro_f1: 0.4997; mcc: 0.0000
+ccfraud,acc: 0.9266 ± 0.0057; missing: 0.0000 ± 0.0000; f1: 0.9181; macro_f1: 0.5919; mcc: 0.1924
+polish,acc: 0.9488 ± 0.0053; missing: 0.0000 ± 0.0000; f1: 0.9238; macro_f1: 0.4869; mcc: 0.0000
+taiwan,acc: 0.9678 ± 0.0048; missing: 0.0000 ± 0.0000; f1: 0.9519; macro_f1: 0.4918; mcc: 0.0000
+portoseguro,acc: 0.6826 ± 0.0095; missing: 0.0000 ± 0.0000; f1: 0.7864; macro_f1: 0.4344; mcc: 0.0100
+travelinsurance,acc: 0.7167 ± 0.009; missing: 0.0000 ± 0.000; f1: 0.8221; macro_f1: 0.4306; mcc: -0.0036
+ES_FinanceES,acc: 0.2746 ± 0.0056; missing: 0.0659 ± 0.0031; f1: 0.2741; macro_f1: 0.2519; mcc: -0.1895
+ES_Multifin,acc: 0.3087 ± 0.0305; missing: 0.0174 ± 0.0086; f1: 0.2681; macro_f1: 0.2497; mcc: 0.1676
+ES_EFP,acc: 0.2703 ± 0.074; missing: 0.0000 ± 0.000; f1: 0.1150; macro_f1: 0.1418; mcc: 0.0000
+ES_EFPA,acc: 0.2544 ± 0.0289; missing: 0.0000 ± 0.0000; f1: 0.1032; macro_f1: 0.1014; mcc: 0.0000
+ES_FNS,rouge1: 0.0644; rouge2: 0.0149; rougeL: 0.0432; bert_score_f1: 0.2616
+ES_TSA,acc: 0.2382 ± 0.0069; missing: 0.6333 ± 0.0078; f1: 0.3593; macro_f1: 0.2807; mcc: 0.1515
