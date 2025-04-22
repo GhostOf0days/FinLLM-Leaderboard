@@ -20,7 +20,7 @@ Key characteristics:
 - Requires synthesizing sentiment, event relevance, and broader context
 - Focuses on short-term market trend prediction
 
-Example dataset (`<https://huggingface.co/datasets/ChanceFocus/cikm18>`_):
+Example dataset (`<https://huggingface.co/datasets/ChanceFocus/flare-sm-cikm>`_):
 
 .. figure:: images/cikm18_example.png  
    :width: 100%  

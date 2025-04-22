@@ -7,5 +7,8 @@ Datasets
    :caption: Datasets
 
    fpb
+   finqa
+   confinqa
+   CIKM18
 
 
