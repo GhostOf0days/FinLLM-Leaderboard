@@ -1,6 +1,6 @@
 .. _deepseek_zero_shot:
 
-Benchmark DeepSeek on Financial Tasks
+Benchmark DeepSeek on Financial Sentiment Analysis
 ================================================
 
 This guide demonstrates how to benchmark DeepSeek models in a **Zero-Shot** setting using their API:

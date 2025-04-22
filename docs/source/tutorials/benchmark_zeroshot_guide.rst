@@ -1,6 +1,6 @@
 .. _zero_shot_llama:
 
-Benchmark Llama-3.1 on Financial Tasks (zeroshot)
+Benchmark Llama-3.1 on Financial Sentiment Analysis (zeroshot)
 =============================================================
 
 .. contents:: Table of Contents
