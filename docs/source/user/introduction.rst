@@ -48,7 +48,7 @@ Financial AI Readiness
 On the right, this segment embodies the primary objective of the Leaderboard: to build a gateway between academia and industry. By translating complex research achievements into accessible and actionable insights, we foster the growth of the Agentic AI Ecosystem. Much like established industry standards such as MCP and MOF, this section sets the benchmark for financial AI readiness, ensuring that innovations in financial language models are both practical and impactful.
 
 
-Key Features
+Contents
 ============
 Task Categories
 ------------------
@@ -76,6 +76,8 @@ We employ diverse metrics to provide a comprehensive assessment:
 - Matthews Correlation Coefficient: For binary classification tasks
 - Sharpe Ratio: For risk-adjusted return measurement
 
+Key Features
+============
 ZKP Integration
 ------------------
 Our Zero-Knowledge Proof (ZKP) implementation ensures evaluation integrity while protecting sensitive data:
