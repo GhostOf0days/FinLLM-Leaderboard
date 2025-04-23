@@ -1,6 +1,6 @@
 .. _zero_shot_openai:
 
-Benchmark ChatGPT on Financial Tasks (zeroshot)
+Benchmark ChatGPT on Financial Sentiment Analysis (zeroshot)
 =============================================================
 
 .. contents:: Table of Contents

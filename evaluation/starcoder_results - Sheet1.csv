@@ -1,50 +1,50 @@
 ,
-NER,
-FINER-ORD,
+NER,entity_f1: 0.0621
+FINER-ORD,entity_f1: 0.0623; f1: 0.1425
 ,
 ,
-FinRED,
+FinRED,precision: 0.0027; recall: 0.0141; f1: 0.0045
 ,
 ,
-SC,
+SC,acc: 0.8500 +- 0.0038; missing: 0.0042 +- 0.0007; f1: 0.8670; macro_f1: 0.5350; mcc: 0.0763
 ,
 ,
-CD,
+CD,entity_f1: 0.0000; f1: 0.0089
 ,
 ,
-FNXL,
+FNXL,entity_f1: 0.000; f1: 0.001
 ,
 ,
-FSRL,
+FSRL,entity_f1: 0.0114; f1: 0.0379
 ,
 ,
-FPB,
+FPB,acc: 0.4010 +- 0.0157; missing: 0.0041 +- 0.0021; f1: 0.3200; macro_f1: 0.4101; mcc: 0.2678
 ,
 ,
-FiQA-SA,
+FiQA-SA,acc: 0.4000 +- 0.032; mssing: 0.0000 +- 0.0000; f1: 0.3169; macro_f1:0.2545; mcc: 0.1487
 ,
 ,
-TSA,
+TSA,rmse: 0.6077; missing: 0.0000 +- 0
 ,
 ,
-Headlines,
+Headlines,avg_f1: 0.5995
 ,
 ,
-FOMC,
+FOMC,acc: 0.3065 +- 0.0207; missing: 0.0040 +- 0.0028; f1: 0.2616; macro_f1: 0.2722; mcc: 0.0314
 ,
 ,
-FinArg-AUC,
-FinArg-ARC,
-MultiFin,
-MA,
-MLESG,
-FinQA,
-TATQA,
-Regulations,
-ConvFinQA,
-EDTSUM,
-ECTSUM,
-BigData22,
+FinArg-AUC,acc: 0.0918 +- 0.0093; missing: 0.8184 +- 0.0124; f1: 0.1485; macro_f1: 0.1526; mcc: 0.0081
+FinArg-ARC,acc: 0.4348 +- 0.0189; missing: 0.0029 - 0.0020; f1: 0.4875; macro_f1: 0.3102; mcc: 0.0140
+MultiFin,acc: 0.3462 +- 0.0204; missing: 0.0165 +- 0.0055; f1: 0.2921; macro_f1: 0.2666; mcc: 0.2049
+MA,acc: 0.4880 +- 0.0224; missing: 0.0000 +- 0.0000; f1: 0.4403; macro_f1: 0.4403; mcc: -0.0296
+MLESG,acc: 0.1533 +- 0.0208; missing: 0.4567 +- 0.0288; f1: 0.1402; macro_f1: 0.0976; mcc: 0.1531
+FinQA,acc: 0 +- 0
+TATQA,acc: 0 +- 0
+Regulations,ERROR
+ConvFinQA,acc: 0 +- 0
+EDTSUM,rouge1: 0.1518; rouge2: 0.0692; rougeL: 0.1219; bert_score_f1: 0.5987
+ECTSUM,rouge1: 0; rouge2: 0; rougeL: 0; bert_score_f1: 0
+BigData22,acc: 0.5380 +- 0.013; missing: 0.0000 +- 0.0000; f1: 0.4857; macro_f1: 0.4650; mcc:0.0126
 ACL18,acc: 0.5040 +- 0.0082; missing: 0.0000 +- 0.0000; f1: 0.4857; macro_f1: 0.4831; mcc: -0.0038
 CIKM18,acc: 0.4829 +- 0.0148; missing: 0.0000 +- 0.0000; f1: 0.4858; maro_f1: 0.4817; mcc: -0.0242
 German,acc: 0.6600 +- 0.0335; missing: 0.0000 +- 0.0000; f1: 0.5248; macro_f1: 0.3976; mcc: 0.0000
