@@ -7,5 +7,14 @@ Datasets
    :caption: Datasets
 
    fpb
+   finqa
+   confinqa
+   CIKM18
+   headlines
+   multifin
+   FINER-ORD
+   FINRED
+
+
 
 

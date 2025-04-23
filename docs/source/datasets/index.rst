@@ -11,5 +11,10 @@ Datasets
    confinqa
    CIKM18
    headlines
+   multifin
+   FINER-ORD
+   FINRED
+
+
 
 

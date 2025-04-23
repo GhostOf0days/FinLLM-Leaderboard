@@ -1,0 +1,206 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multifin &mdash; OpenFinLLM Leaderboard Documentation 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=e8ce10b2" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenFinLLM Leaderboard Documentation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">OpenFinLLM Leaderboard Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user/introduction.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../basics_setup/index.html">Basic and Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../use_cases/index.html">Use Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap/index.html">Road Map</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenFinLLM Leaderboard Documentation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Multifin</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/Open-Finance-Lab/FinLLM-Leaderboard/blob/main/docs/source/datasets/multifin.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="multifin">
+<h1>Multifin<a class="headerlink" href="#multifin" title="Link to this heading"></a></h1>
+<nav class="contents local" id="table-of-contents">
+<p class="topic-title">Table of Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#description" id="id1">Description</a></p>
+<ul>
+<li><p><a class="reference internal" href="#task-description" id="id2">Task Description</a></p></li>
+<li><p><a class="reference internal" href="#example-queries" id="id3">Example Queries</a></p></li>
+<li><p><a class="reference internal" href="#evaluation-metrics" id="id4">Evaluation Metrics</a></p></li>
+<li><p><a class="reference internal" href="#references" id="id5">References</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="description">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Description</a><a class="headerlink" href="#description" title="Link to this heading"></a></h2>
+<p><strong>Multifin</strong> is an NLP benchmark for categorizing English headlines drawn from a large global accounting firm’s public‐facing websites into their primary topical domain.</p>
+<section id="task-description">
+<h3><a class="toc-backref" href="#id2" role="doc-backlink">Task Description</a><a class="headerlink" href="#task-description" title="Link to this heading"></a></h3>
+<p>The Multifin dataset consists of real‐world article headlines published by a major accounting firm. Each headline must be assigned to exactly one of six high‐level categories. The goal is to evaluate a model’s ability to understand domain‐specific language and correctly map each headline to its topic.</p>
+<p>Key characteristics:
+- Contains tens of thousands of English headlines.
+- Multi‐class classification with six mutually exclusive labels:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Finance</p></li>
+<li><p>Technology</p></li>
+<li><p>Tax &amp; Accounting</p></li>
+<li><p>Business &amp; Management</p></li>
+<li><p>Government &amp; Controls</p></li>
+<li><p>Industry</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="example-queries">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">Example Queries</a><a class="headerlink" href="#example-queries" title="Link to this heading"></a></h3>
+<p>Text: Deal summary Helen Oy / Infratek Finland Oy
+Answer: Finance</p>
+<p>Text: PwC named a Major Player in the IDC MarketScape for Worldwide Intelligent Automation Services 2019
+Answer: Technology</p>
+<p>Text: Proposal for digital services tax
+Answer: Tax &amp; Accounting</p>
+<p>Text: Social Impact Lab
+Answer: Business &amp; Management</p>
+<p>Text: International Financial Reporting Standards (IFRS)
+Answer: Tax &amp; Accounting</p>
+<p>Text: Financial Crime
+Answer: Government &amp; Controls</p>
+<p>Text: Global Entertainment &amp; Media Outlook 2018–2022
+Answer: Industry</p>
+<p>Example dataset (<a href="#id6"><span class="problematic" id="id7">`https://huggingface.co/datasets/ChanceFocus/flare-multifin`_</span></a>):</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="datasets/images/multifin_example.png"><img alt="datasets/images/multifin_example.png" src="datasets/images/multifin_example.png" style="width: 100%;" />
+</a>
+</figure>
+</section>
+<section id="evaluation-metrics">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Evaluation Metrics</a><a class="headerlink" href="#evaluation-metrics" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Accuracy</p></li>
+<li><p>F1‐score (macro‐averaged)</p></li>
+</ol>
+</section>
+<section id="references">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">References</a><a class="headerlink" href="#references" title="Link to this heading"></a></h3>
+<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<dl>
+<dt>&#64;inproceedings{jorgensen-etal-2023-multifin,</dt><dd><p>title = “{M}ulti{F}in: A Dataset for Multilingual Financial {NLP}”,
+author = “J{o}rgensen, Rasmus  and</p>
+<blockquote>
+<div><p>Brandt, Oliver  and
+Hartmann, Mareike  and
+Dai, Xiang  and
+Igel, Christian  and
+Elliott, Desmond”,</p>
+</div></blockquote>
+<dl class="simple">
+<dt>editor = “Vlachos, Andreas  and</dt><dd><p>Augenstein, Isabelle”,</p>
+</dd>
+</dl>
+<p>booktitle = “Findings of the Association for Computational Linguistics: EACL 2023”,
+month = may,
+year = “2023”,
+address = “Dubrovnik, Croatia”,
+publisher = “Association for Computational Linguistics”,
+url = “<a class="reference external" href="https://aclanthology.org/2023.findings-eacl.66/">https://aclanthology.org/2023.findings-eacl.66/</a>”,
+doi = “10.18653/v1/2023.findings-eacl.66”,
+pages = “894–909”,
+abstract = “Financial information is generated and distributed across the world, resulting in a vast amount of domain-specific multilingual data. Multilingual models adapted to the financial domain would ease deployment when an organization needs to work with multiple languages on a regular basis. For the development and evaluation of such models, there is a need for multilingual financial language processing datasets. We describe MultiFin {–} a publicly available financial dataset consisting of real-world article headlines covering 15 languages across different writing systems and language families. The dataset consists of hierarchical label structure providing two classification tasks: multi-label and multi-class. We develop our annotation schema based on a real-world application and annotate our dataset using both {textquoteleft}label by native-speaker’ and {textquoteleft}translate-then-label’ approaches. The evaluation of several popular multilingual models, e.g., mBERT, XLM-R, and mT5, show that although decent accuracy can be achieved in high-resource languages, there is substantial room for improvement in low-resource languages.”</p>
+</dd>
+</dl>
+<p>}</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, OpenFinLLM Leaderboard.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

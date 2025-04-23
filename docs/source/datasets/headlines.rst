@@ -5,9 +5,9 @@ Headlines
 .. contents:: Table of Contents
    :local:
 
-Description
+Description 
 ============
-**Headlines** is NLP benchmark for determining semantic labels for market msignals from news-related headlines. 
+**Headlines** is NLP benchmark for determining semantic labels for market signals from news-related headlines. 
 
 Task Description
 -------------------
