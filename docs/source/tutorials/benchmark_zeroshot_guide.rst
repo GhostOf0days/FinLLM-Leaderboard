@@ -1,6 +1,6 @@
 .. _zero_shot_llama:
 
-Benchmark Llama-3.1 on Financial Sentiment Analysis (zeroshot)
+Benchmark Llama-3.2 on Financial Sentiment Analysis (zeroshot)
 =====================================================================
 
 .. contents:: Table of Contents
@@ -8,21 +8,32 @@ Benchmark Llama-3.1 on Financial Sentiment Analysis (zeroshot)
 
 Overview
 --------
-This guide shows how to benchmark Llama-3.1-1B model in a **Zero-Shot** setting:
+This guide shows how to benchmark Llama-3.2-3B model in a **Zero-Shot** setting:
 
-1. **Install** the necessary libraries
-2. **Load** model from Hugging Face
-3. **Prompt** the model in a zero-shot manner for each question in the dataset
-4. **Save** model outputs with accuracy scoring
+1. Configure API access using config.json
+2. Load model from Hugging Face
+3. Prompt the model for financial sentiment analysis
+4. Evaluate accuracy on the FLARE-FIQASA dataset
 
 Prerequisites
 -------------
 
-1. **Hugging Face Access Token**:
-   - Create at `huggingface.co/settings/tokens <https://huggingface.co/settings/tokens>`_
-   - Request model access for `Llama-3.2-1B <https://huggingface.co/meta-llama/Llama-3.2-1B>`_
+1. config.json containing your Hugging Face Access Token:
 
-2. Dataset structure ``flare-fiqasa`` `<https://huggingface.co/datasets/ChanceFocus/flare-fiqasa>`_:
+   .. code-block:: json
+
+       {
+         "huggingface_token": "your_huggingface_token_here"
+       }
+
+   .. note::
+       Create this file and add your real Hugging Face token before starting.
+
+2. Request model access at Hugging Face:
+   - Create a token at `huggingface.co/settings/tokens <https://huggingface.co/settings/tokens>`_
+   - Request access for `Llama-3.2-3B <https://huggingface.co/meta-llama/Llama-3.2-3B>`_
+
+3. Dataset structure ``flare-fiqasa`` `<https://huggingface.co/datasets/ChanceFocus/flare-fiqasa>`_:
 
    .. list-table:: Example Dataset Entry
       :header-rows: 1
@@ -39,17 +50,11 @@ Prerequisites
         - "neutral"
         - "fiqasa0"
 
-3. Install dependencies:
+4. Install dependencies:
 
    .. code-block:: bash
 
-      pip install 'accelerate>=0.26.0' \
-                  transformers \
-                  datasets \
-                  evaluate \
-                  scikit-learn \
-                  tqdm \
-                  torch
+      pip install accelerate transformers datasets scikit-learn tqdm torch huggingface_hub
 
 Tutorial
 --------
@@ -59,30 +64,40 @@ Tutorial
    .. code-block:: python
 
       import re
+      import json
       import threading
       from datasets import load_dataset
       from transformers import AutoTokenizer, AutoModelForCausalLM, TextIteratorStreamer
-      import evaluate
       from tqdm.auto import tqdm
+      from huggingface_hub import login
 
-.. note:: 
-
-    Imports the essential Python libraries used throughout the benchmarking process, including model loading, dataset handling, evaluation metrics, and multi-threaded streaming for real-time inference.
+   .. note:: 
+       Import libraries for loading models, processing datasets, and tracking progress.
 
 2. Configuration Setup
 
    .. code-block:: python
 
+      # Load config from config.json
+      with open("config.json", "r") as f:
+          config = json.load(f)
+
       # Model and dataset configuration
-      MODEL_NAME = "meta-llama/Llama-3.2-1B"
+      MODEL_NAME = "meta-llama/Llama-3.2-3B"
       DATASET_NAME = "ChanceFocus/flare-fiqasa"
-      ACCESS_TOKEN = "your_hf_token_here"  # Replace with your token
+      ACCESS_TOKEN = config.get("huggingface_token", "")
 
-.. note::
+   .. note::
+       Load your Hugging Face token from config.json and set up the model and dataset paths.
 
-    Define the model, dataset, and access credentials needed for loading and evaluating the LLaMA-3.2-1B model. Be sure to replace the access token with your own from Hugging Face to authenticate model access.
+3. Hugging Face Authentication
 
-3. Model Initialization
+   .. code-block:: python
+   
+      # Login to Hugging Face hub
+      login(token=ACCESS_TOKEN)
+
+4. Model Initialization
 
    .. code-block:: python
 
@@ -92,17 +107,26 @@ Tutorial
               MODEL_NAME,
               device_map="auto",
               token=ACCESS_TOKEN,
+              trust_remote_code=True,
           )
 
-          print("\nLoading tokenizer...")
-          tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+          print("Loading tokenizer...")
+          tokenizer = AutoTokenizer.from_pretrained(
+              MODEL_NAME,
+              token=ACCESS_TOKEN,
+              trust_remote_code=True,
+          )
+
+          # Ensure pad_token_id is set
+          if tokenizer.pad_token_id is None:
+              tokenizer.pad_token_id = tokenizer.eos_token_id
+
           return model, tokenizer
 
-.. note::
+   .. note::
+       Load the Llama-3.2 model and tokenizer from Hugging Face using your access token.
 
-    This function loads the pre-trained LLaMA model and its corresponding tokenizer from Hugging Face using the specified model name and access token. The model is automatically mapped to the available device for efficient inference.
-
-4. Zero-Shot Prompt Template
+5. Zero-Shot Prompt Template
 
    .. code-block:: python
 
@@ -113,23 +137,35 @@ Tutorial
       Options: {', '.join(example['choices'])}
       Answer:"""
 
-.. note::
+   .. note::
+       Create a simple prompt that asks the model to analyze sentiment without any examples.
 
-    This function creates a simple prompt to ask the model to analyze the sentiment of financial text. It includes the text, possible answer choices, and a space for the model to give its prediction.
-
-5. Generation Function
+6. Generation Function
 
    .. code-block:: python
 
       def generate_response(prompt, model, tokenizer, max_new_tokens=10):
           """Generate response with progress tracking"""
-          inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
-          streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
+          # Tokenize with attention mask
+          inputs = tokenizer(
+              prompt,
+              return_tensors="pt",
+              padding=True,
+              truncation=True,
+          )
+
+          streamer = TextIteratorStreamer(
+              tokenizer,
+              skip_prompt=True,
+              skip_special_tokens=True
+          )
 
           generation_kwargs = dict(
-              input_ids=inputs.input_ids,
+              input_ids=inputs.input_ids.to(model.device),
+              attention_mask=inputs.attention_mask.to(model.device),
+              pad_token_id=tokenizer.pad_token_id,
               max_new_tokens=max_new_tokens,
-              streamer=streamer
+              streamer=streamer,
           )
 
           thread = threading.Thread(target=model.generate, kwargs=generation_kwargs)
@@ -143,24 +179,23 @@ Tutorial
           thread.join()
           return generated_text
 
-.. note::
+   .. note::
+       Run the model in a separate thread to generate a response while showing a progress bar.
 
-    This function runs the model to generate a response from the prompt. It uses a progress bar to track token generation and runs the process in a separate thread for smoother output.
-
-6. Answer Extraction
+7. Answer Extraction
 
    .. code-block:: python
 
       def extract_answer(response):
           """Extract answer section from generated text"""
-          lower_response = response.lower()
-          answer_idx = lower_response.find("answer:")
-          if answer_idx == -1:
-              return ""
-
-          answer_section = response[answer_idx + len("answer:"):].strip()
-          explanation_idx = answer_section.lower().find("explanation:")
-          return answer_section[:explanation_idx].strip() if explanation_idx != -1 else answer_section
+          lower = response.lower()
+          idx = lower.find("answer:")
+          if idx != -1:
+              sec = response[idx + len("answer:"):].strip()
+              expl = sec.lower().find("explanation:")
+              return sec[:expl].strip() if expl != -1 else sec
+          # fallback: no explicit "Answer:" so return full response for matching
+          return response
 
       def match_label(answer_section, choices):
           """Match extracted answer to valid choices"""
@@ -171,19 +206,30 @@ Tutorial
                   return choice
           return None
 
-.. note::
+   .. note::
+       Extract and parse the model's answer, handling different response formats.
 
-    These functions pull out the model’s final answer from the generated text and match it to one of the valid choices. This helps evaluate whether the model's response aligns with the expected answer format.
+8. Accuracy Calculation
 
-7. Evaluation Function
+   .. code-block:: python
+
+      def calculate_accuracy(predictions, references):
+          """Calculate accuracy manually"""
+          correct = sum(1 for p, r in zip(predictions, references) if p == r)
+          return correct / len(references) if references else 0
+
+   .. note::
+       A simple function to calculate the percentage of correct predictions.
+
+9. Evaluation Function
 
    .. code-block:: python
 
       def evaluate_model(model, tokenizer, dataset_split, num_samples=10):
           """Run evaluation with progress tracking"""
-          accuracy = evaluate.load("accuracy")
           predictions = []
           references = []
+          results = []
 
           progress_bar = tqdm(total=num_samples, desc="Evaluating")
 
@@ -197,54 +243,104 @@ Tutorial
               gold_label = ex['choices'][ex['gold']]
 
               # Convert to indices
-              predictions.append(ex['choices'].index(pred_label) if pred_label in ex['choices'] else -1
+              pred_index = ex['choices'].index(pred_label) if pred_label in ex['choices'] else -1
+              predictions.append(pred_index)
               references.append(ex['gold'])
+              
+              # Store result
+              results.append({
+                  'text': ex['text'],
+                  'response': response,
+                  'predicted': pred_label,
+                  'gold': gold_label,
+                  'correct': (pred_index == ex['gold'])
+              })
 
               progress_bar.update(1)
-              current_acc = accuracy.compute(predictions=predictions, references=references)['accuracy']
-              progress_bar.set_postfix({"accuracy": f"{current_acc:.2%}"})
+              acc = calculate_accuracy(predictions, references)
+              progress_bar.set_postfix({"accuracy": f"{acc:.2%}"})
 
           progress_bar.close()
-          return accuracy.compute(predictions=predictions, references=references)
+          
+          # Calculate final accuracy
+          final_accuracy = calculate_accuracy(predictions, references)
+          
+          return {"accuracy": final_accuracy, "results": results}
 
-.. note::
+   .. note::
+       Test the model on examples from the dataset and calculate the accuracy.
 
-    This function tests the model on a set of examples, compares its predictions to the correct answers, and tracks accuracy using a progress bar. It helps measure how well the model performs on the dataset.
+10. Main Execution
 
-8. Main Execution
+    .. code-block:: python
 
-   .. code-block:: python
+       if __name__ == "__main__":
+           # Login to Hugging Face hub
+           login(token=ACCESS_TOKEN)
 
-      if __name__ == "__main__":
-          # Initialize components
-          model, tokenizer = initialize_model()
-          dataset = load_dataset(DATASET_NAME)
+           # Initialize model & tokenizer
+           model, tokenizer = initialize_model()
+           dataset = load_dataset(DATASET_NAME)
 
-          # Run evaluation
-          results = evaluate_model(
-              model,
-              tokenizer,
-              dataset["test"],
-              num_samples=10
-          )
+           # Run evaluation
+           evaluation = evaluate_model(
+               model,
+               tokenizer,
+               dataset["test"],
+               num_samples=10
+           )
 
-          print(f"\nFinal Accuracy: {results['accuracy']:.2%}")
+           print(f"\nFinal Accuracy: {evaluation['accuracy']:.2%}")
+           
+           # Print a few example results
+           print("\nResults:")
+           for i, result in enumerate(evaluation['results']):
+               print(f"Example {i+1}: {result['text'][:50]}...")
+               print(f"Predicted: {result['predicted']}, Gold: {result['gold']}")
+               print(f"Correct: {'✓' if result['correct'] else '✗'}")
+               print()
 
-.. note::
-    
-    This is the main script that runs everything—loading the model and dataset, evaluating the model on test data, and printing the final accuracy. It ties all the previous steps together for a complete run.
+   .. note::
+       Run the full evaluation pipeline and report the accuracy with example results.
 
 Running the Tutorial
 --------------------
 
-1. Replace ``your_hf_token_here`` with your actual Hugging Face token
+1. Create a config.json file with your Hugging Face token
 2. Ensure GPU availability for model inference
-3. Save code as ``llama_zero_shot.py``
-4. Run with ``python llama_zero_shot.py``
+3. Save code as ``benchmark_llama_zeroshot.py``
+4. Run with ``python benchmark_llama_zeroshot.py``
+
+Example Output
+-------------
+
+.. code-block:: text
+
+    Loading model...
+    Loading tokenizer...
+    Evaluating: 100%|████████████████| 10/10 [00:12<00:00,  1.22s/it, accuracy=70.00%]
+
+    Final Accuracy: 70.00%
+    
+    Results:
+    Example 1: Whats up with $LULU? Numbers looked good...
+    Predicted: neutral, Gold: neutral
+    Correct: ✓
+    
+    Example 2: $COST thesis: the most bullet-proof retailer...
+    Predicted: positive, Gold: positive
+    Correct: ✓
 
 Notes
 -----
-- **Zero-shot** approach uses direct prompting without examples
-- **max_new_tokens** controls response length (10 for single-word answers)
-- **answer:** prefix is critical for response parsing
-- Partial matching handles formatting variations in model outputs
+- **Zero-shot learning**: Testing models without any examples or fine-tuning
+- **Threading**: Running generation in a separate thread for better UX
+- **Answer extraction**: Parsing model outputs to find the sentiment label
+- **Temperature**: Controls randomness in model outputs
+- **Max Tokens**: Limits the length of generated responses
+
+Additional Resources
+-------------------
+- `Llama 3.2 Model Card <https://huggingface.co/meta-llama/Llama-3.2-3B>`_
+- `FLARE-FIQASA Dataset <https://huggingface.co/datasets/ChanceFocus/flare-fiqasa>`_
+- `Hugging Face Transformers <https://huggingface.co/docs/transformers/index>`_
