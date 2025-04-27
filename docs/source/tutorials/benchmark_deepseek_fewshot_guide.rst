@@ -1,18 +1,19 @@
-.. _deepseek_zero_shot:
+.. _deepseek_few_shot:
 
-Benchmark DeepSeek on Financial Sentiment Analysis
+Benchmark DeepSeek on Financial Sentiment Analysis (few-shot)
 ========================================================
 
-This guide demonstrates how to benchmark DeepSeek models in a **Zero-Shot** setting using their API:
+This guide demonstrates how to benchmark DeepSeek models in a **Few-Shot** setting using their API:
 
-1. **Configure** API access using config.json
-2. **Prompt** the model with financial sentiment analysis questions
-3. **Evaluate** accuracy against the FLARE-FIQASA dataset
+1. Configure API access using config.json
+2. Provide examples to the model
+3. Prompt the model with financial sentiment analysis questions
+4. Evaluate accuracy against the FLARE-FIQASA dataset
 
 Prerequisites
 -------------
 
-1. **config.json file** containing your API keys:
+1. config.json containing your DeepSeek API key:
 
    .. code-block:: json
 
@@ -52,7 +53,6 @@ Tutorial
 
       import json
       import requests
-      import numpy as np
       from datasets import load_dataset
       from tqdm.auto import tqdm
 
@@ -74,18 +74,58 @@ Tutorial
           "Content-Type": "application/json"
       }
 
-3. Zero-Shot Prompt Template
+3. Define Few-Shot Examples
 
    .. code-block:: python
 
-      def zero_shot_prompt(example):
-          """Construct standardized zero-shot prompt"""
-          return f"""Analyze the sentiment of this financial text. Respond ONLY with the label:
-      Text: {example['text']}
-      Options: {', '.join(example['choices'])}
-      Label:"""
+      # Define examples for few-shot learning
+      few_shot_examples = [
+          {
+              "text": "Apple is doing great with the new iPhone release, stock is up 5%.",
+              "choices": ["negative", "positive", "neutral"],
+              "answer": "positive"
+          },
+          {
+              "text": "Tesla missed earnings expectations and reported a decline in margins.",
+              "choices": ["negative", "positive", "neutral"],
+              "answer": "negative"
+          },
+          {
+              "text": "IBM reported Q3 results in line with analyst expectations.",
+              "choices": ["negative", "positive", "neutral"],
+              "answer": "neutral"
+          },
+          {
+              "text": "The market traded sideways today with no major movements.",
+              "choices": ["negative", "positive", "neutral"],
+              "answer": "neutral"
+          }
+      ]
 
-4. API Call Function
+4. Few-Shot Prompt Template
+
+   .. code-block:: python
+
+      def few_shot_prompt(example, examples):
+          """Construct few-shot prompt with examples"""
+          prompt = "Analyze the sentiment of financial texts. Choose negative, positive, or neutral.\n\n"
+          
+          # Add examples
+          for i, ex in enumerate(examples):
+              prompt += f"Example {i+1}:\n"
+              prompt += f"Text: {ex['text']}\n"
+              prompt += f"Options: {', '.join(ex['choices'])}\n"
+              prompt += f"Label: {ex['answer']}\n\n"
+          
+          # Add the test example
+          prompt += f"Now analyze this new text:\n"
+          prompt += f"Text: {example['text']}\n"
+          prompt += f"Options: {', '.join(example['choices'])}\n"
+          prompt += f"Label:"
+          
+          return prompt
+
+5. API Call Function
 
    .. code-block:: python
 
@@ -114,7 +154,7 @@ Tutorial
               print(f"API Error: {e}")
               return ""
 
-5. Answer Validation
+6. Answer Validation
 
    .. code-block:: python
 
@@ -126,7 +166,7 @@ Tutorial
                   return choice
           return None
 
-6. Accuracy Calculation
+7. Accuracy Calculation
 
    .. code-block:: python
 
@@ -135,12 +175,12 @@ Tutorial
           correct = sum(1 for p, r in zip(predictions, references) if p == r)
           return correct / len(references) if len(references) > 0 else 0
 
-7. Evaluation Function
+8. Evaluation Function
 
    .. code-block:: python
 
-      def evaluate_model(dataset_split, num_samples=10):
-          """Run evaluation with progress tracking"""
+      def evaluate_model(dataset_split, examples, num_samples=10):
+          """Run evaluation with few-shot examples"""
           predictions = []
           references = []
           results = []
@@ -149,25 +189,22 @@ Tutorial
 
           for i in range(num_samples):
               ex = dataset_split[i]
-              prompt = zero_shot_prompt(ex)
+              prompt = few_shot_prompt(ex, examples)
               response = get_api_response(prompt)
               pred_label = validate_response(response, ex['choices'])
               gold_label = ex['choices'][ex['gold']]
               
-              # For display purposes
-              pred_index = ex['choices'].index(pred_label) if pred_label in ex['choices'] else -1
-              
-              # Store results
-              predictions.append(pred_index)
+              # Store predictions
+              predictions.append(ex['choices'].index(pred_label) if pred_label in ex['choices'] else -1)
               references.append(ex['gold'])
               
-              # Record individual result
+              # Store detailed results
               results.append({
                   'text': ex['text'],
                   'model_response': response,
                   'predicted': pred_label,
                   'gold': gold_label,
-                  'correct': pred_index == ex['gold']
+                  'correct': (pred_label == gold_label)
               })
 
               progress_bar.update(1)
@@ -181,47 +218,47 @@ Tutorial
           
           return {"accuracy": final_accuracy, "results": results}
 
-8. Main Execution
+9. Main Execution
 
    .. code-block:: python
 
       if __name__ == "__main__":
+          # Load dataset
           dataset = load_dataset(DATASET_NAME)
-
-          evaluation_results = evaluate_model(
+          
+          # Run evaluation using few-shot learning
+          evaluation = evaluate_model(
               dataset["test"],
+              few_shot_examples,
               num_samples=10
           )
-
-          print(f"\nFinal Accuracy: {evaluation_results['accuracy']:.2%}")
           
-          # Print individual results
-          print("\nIndividual Results:")
-          for i, result in enumerate(evaluation_results['results']):
-              print(f"{i+1}. Text: {result['text'][:50]}...")
-              print(f"   Model response: {result['model_response']}")
-              print(f"   Predicted: {result['predicted']}, Gold: {result['gold']}")
-              print(f"   Correct: {'✓' if result['correct'] else '✗'}")
+          # Print results
+          print(f"\nAccuracy: {evaluation['accuracy']:.2%}")
+          
+          print("\nResults:")
+          for i, result in enumerate(evaluation['results']):
+              print(f"Example {i+1}: {result['text'][:50]}...")
+              print(f"Predicted: {result['predicted']}, Gold: {result['gold']}")
+              print(f"Correct: {'✓' if result['correct'] else '✗'}")
               print()
 
 Running the Tutorial
 --------------------
 
 1. Create a config.json file with your DeepSeek API key
-2. Save code as ``benchmark_deepseek_zeroshot.py``
-3. Run with ``python benchmark_deepseek_zeroshot.py``
+2. Save code as ``benchmark_deepseek_fewshot.py``
+3. Run with ``python benchmark_deepseek_fewshot.py``
 
 Notes
 -----
-- **Rate Limits**: DeepSeek API has default rate limits
-- **Model Options**:
-   - ``deepseek-chat`` for general financial analysis
-   - ``deepseek-reasoner`` for complex reasoning tasks
-- **Prompt Design**: Explicit instruction ("Respond ONLY with the label") improves consistency
-- **Error Handling**: API calls include error handling
-- **Results Analysis**: The code prints detailed results for each sample to help analyze errors
+
+- **Few-shot learning** means providing examples to the model before asking it to solve a new problem
+- **Temperature** determines the randomness of the model response, with 0 producing deterministic outputs
+- **Max Tokens** limits the length of the model's response
+- **System Prompt** guides the model's behavior and provides context
 
 Additional Resources
---------------------
+-------------------
 - `DeepSeek API Documentation <https://api.deepseek.com/docs>`_
-- `FLARE-FIQASA Dataset Paper <https://arxiv.org/abs/2308.00075>`_
+- `FLARE-FIQASA Dataset <https://huggingface.co/datasets/ChanceFocus/flare-fiqasa>`_ 

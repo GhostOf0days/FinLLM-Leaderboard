@@ -1,6 +1,6 @@
 .. _zero_shot_openai:
 
-Benchmark ChatGPT on Financial Sentiment Analysis (zeroshot)
+Benchmark GPT-4o on Financial Sentiment Analysis (zeroshot)
 =============================================================
 
 .. contents:: Table of Contents
@@ -8,57 +8,51 @@ Benchmark ChatGPT on Financial Sentiment Analysis (zeroshot)
 
 This guide shows how to benchmark an OpenAI model in a **Zero-Shot** setting:
 
-1. **Install** the necessary libraries.  
-2. **Load** your OpenAI API key.  
-3. **Prompt** the model in a zero-shot manner for each question in a CSV file.  
-4. **Save** model outputs in a new column named ``generated_answer`` in the resulting CSV.
+1. Configure API access using config.json
+2. Prompt the model with financial multiple-choice questions
+3. Evaluate accuracy and display results
 
 Prerequisites
 -------------
-1. **config.json** containing your keys. For this tutorial, only ``openai_api_key`` is actually used, but you can also store other keys for future expansions:
+1. config.json containing your OpenAI API key:
 
    .. code-block:: json
 
        {
-         "openai_api_key": "sk-your-openai-key-here",
-         "mistral_api_key": "ignored_for_this_tutorial",
-         "together_ai_api_key": "ignored_for_this_tutorial"
+         "openai_api_key": "your-openai-key-here"
        }
 
    .. note::
-      This JSON file holds your API keys. Only the ``openai_api_key`` is used here, but additional keys can be added for expanding your use to other models in the future.
+      Create this file and add your real API key before starting.
 
-2. A CSV file named ``questions.csv`` with at least a ``question`` column, columns for answer choices, and a column for the expected answer. Here's an example:
+2. Sample financial questions in a list (or alternatively a CSV file):
 
-   .. list-table:: questions.csv
+   .. list-table:: Example Questions
       :header-rows: 1
-      :widths: 20 20 20 20 20
+      :widths: 40 20 20 20 10
 
-      * - question
-        - choiceA
-        - choiceB
-        - choiceC
-        - expected_answer
-      * - "Sammy Sneadle, CFA, is the founder of the Everglades Fund. The question is: how did he violate the standard by not disclosing back-tested data?"
-        - "A. He did not disclose the use of back-tested data."
-        - "B. He failed to deduct fees before returns."
-        - "C. He did not show a weighted composite of similar portfolios."
+      * - Question
+        - Choice A
+        - Choice B
+        - Choice C
+        - Answer
+      * - "Sammy Sneadle, CFA, is the founder of the Everglades Fund. How did he violate the standard by not disclosing back-tested data?"
+        - "He did not disclose the use of back-tested data."
+        - "He failed to deduct fees before returns."
+        - "He did not show a weighted composite of similar portfolios."
         - "A"
 
    .. note::
-      This table provides a visual example of the CSV format required for the tutorial. Each row contains the question, three answer choices, and the expected answer.
+      You can use these examples or add your own financial questions.
 
-3. Install the following libraries:
+3. Install the necessary libraries:
 
    .. code-block:: bash
 
-      pip install openai==0.28.0 \
-                  pandas \
-                  tqdm \
-                  torch
+      pip install openai pandas tqdm
 
    .. note::
-      These commands install the OpenAI library (for API access), pandas (for CSV handling), tqdm (for displaying progress), and torch (for any PyTorch functionality).
+      OpenAI provides access to the API, pandas helps with data handling, and tqdm creates progress bars.
 
 Tutorial
 --------
@@ -66,191 +60,186 @@ Tutorial
 
    .. code-block:: python
 
-      import os
       import json
       import pandas as pd
       from tqdm import tqdm
-      import openai
-      import torch
+      from openai import OpenAI
 
    .. note::
-      This code imports all necessary libraries: `os` and `json` for file handling, `pandas` for data manipulation, `tqdm` for progress tracking, `openai` for OpenAI API interaction, and `torch` in case PyTorch functionality is needed.
+      Standard imports for working with JSON files, data processing, and the OpenAI API.
 
-2. Load Keys
+2. Load API Configuration
 
    .. code-block:: python
       
-      with open("config.json", "r", encoding="utf-8") as f:
+      # Load API keys from config.json
+      with open("config.json", "r") as f:
           config = json.load(f)
-
-      # Required for OpenAI
-      openai.api_key = config["openai_api_key"]
+      
+      # Initialize OpenAI client
+      client = OpenAI(api_key=config["openai_api_key"])
 
    .. note::
-      This snippet loads your API keys from the `config.json` file and sets the OpenAI API key to allow authenticated API calls.
+      This reads your API key and sets up the OpenAI client.
 
-3. Define a Zero-Shot Inference Function
+3. Define Questions
 
    .. code-block:: python
 
-      def generate_multiple_choice_response(
-          question,
-          choiceA,
-          choiceB,
-          choiceC,
-          system_prompt=(
-              "You are a CFA (chartered financial analyst) taking a test to "
-              "evaluate your knowledge of finance. You will be given a question along "
-              "with three possible answers (A, B, and C). Provide only the letter "
-              "for the correct choice (A, B, or C)."
-          ),
-          model_name="gpt-4",
-          temperature=0,
-          max_tokens=128
-      ):
-          """
-          Generate a zero-shot response using OpenAI's ChatCompletion API.
+      # Sample financial questions
+      questions = [
+          {
+              "question": "Sammy Sneadle, CFA, is the founder of the Everglades Fund. How did he violate the standard by not disclosing back-tested data?",
+              "choiceA": "He did not disclose the use of back-tested data.",
+              "choiceB": "He failed to deduct fees before returns.",
+              "choiceC": "He did not show a weighted composite of similar portfolios.",
+              "answer": "A"
+          },
+          {
+              "question": "What is the primary goal of corporate finance?",
+              "choiceA": "Maximizing shareholder value",
+              "choiceB": "Minimizing operational costs",
+              "choiceC": "Increasing market share",
+              "answer": "A"
+          }
+          # Add more questions as needed
+      ]
+
+   .. note::
+      Create a list of question dictionaries with our test cases.
+
+4. Zero-Shot Inference Function
+
+   .. code-block:: python
+
+      def ask_openai(question, choiceA, choiceB, choiceC, model="gpt-4o"):
+          """Generate a zero-shot response to a financial question"""
+          system_prompt = (
+              "You are a CFA (chartered financial analyst) taking a test. "
+              "You will be given a question with three possible answers (A, B, and C). "
+              "Provide only the letter for the correct choice (A, B, or C)."
+          )
           
-          :param str question: The actual question from the user.
-          :param str choiceA: Choice A for the question.
-          :param str choiceB: Choice B for the question.
-          :param str choiceC: Choice C for the question.
-          :param str system_prompt: General instructions or domain expertise the model follows.
-          :param str model_name: LLM name, e.g. "gpt-3.5-turbo" or "gpt-4".
-          :param float temperature: Affects randomness of output.
-          :param int max_tokens: Maximum length for generated response.
-          :return: The model's generated answer.
-          """
+          user_prompt = (
+              f"Question:\n{question}\n\n"
+              f"A. {choiceA}\n"
+              f"B. {choiceB}\n"
+              f"C. {choiceC}\n\n"
+              "Which choice is correct? Answer with just the letter A, B, or C."
+          )
+          
           try:
-              user_prompt = (
-                  f"Question:\n{question}\n\n"
-                  f"{choiceA}\n{choiceB}\n{choiceC}\n\n"
-                  "Which choice is correct (A, B, or C)?"
-              )
-              response = openai.ChatCompletion.create(
-                  model=model_name,
+              response = client.chat.completions.create(
+                  model=model,
                   messages=[
                       {"role": "system", "content": system_prompt},
                       {"role": "user", "content": user_prompt}
                   ],
-                  temperature=temperature,
-                  max_tokens=max_tokens
+                  temperature=0,
+                  max_tokens=10
               )
-              return response["choices"][0]["message"]["content"].strip()
+              return response.choices[0].message.content.strip()
           except Exception as e:
               print(f"Error: {e}")
-              return "Error generating response"
+              return f"Error: {e}"
 
    .. note::
-      This function constructs a complete prompt combining your question and answer choices, sends it to the OpenAI API using the provided model, and returns the model's answer. If an error occurs, it prints the error and returns an error message.
+      This function asks GPT-4o to answer a financial question and return only a letter choice.
 
-4. Read Questions from CSV, Prompt the Model, and Save Results
+5. Evaluation Function
 
    .. code-block:: python
 
-      def run_zero_shot(
-          input_csv="questions.csv",
-          output_csv="gpt_4_answers.csv",
-          model_name="gpt-4"
-      ):
-          """
-          Reads a CSV of questions, prompts GPT-4 to answer them in a zero-shot setting,
-          and writes answers to 'generated_answer' in the output CSV.
+      def evaluate_questions(questions_list, model="gpt-4o"):
+          """Evaluate model on a list of questions"""
+          results = []
+          correct_count = 0
           
-          :param str input_csv: Path to the CSV file containing questions.
-          :param str output_csv: Path for the CSV file with the model's answers.
-          :param str model_name: The model we are testing.
-          """
-          df = pd.read_csv(input_csv)
-          answers = []
-          for _, row in tqdm(df.iterrows(), total=len(df), desc="Generating MC Answers"):
-              q_text = row["question"]
-              a_text = row["choiceA"]
-              b_text = row["choiceB"]
-              c_text = row["choiceC"]
-              answer = generate_multiple_choice_response(
-                  question=q_text,
-                  choiceA=a_text,
-                  choiceB=b_text,
-                  choiceC=c_text,
-                  model_name=model_name,
-                  temperature=0.0,
-                  max_tokens=128
+          for q in tqdm(questions_list, desc=f"Testing {model}"):
+              question = q["question"]
+              choiceA = q["choiceA"]
+              choiceB = q["choiceB"] 
+              choiceC = q["choiceC"]
+              expected = q["answer"].upper().strip()
+              
+              # Get model response
+              response = ask_openai(
+                  question=question,
+                  choiceA=choiceA,
+                  choiceB=choiceB,
+                  choiceC=choiceC,
+                  model=model
               )
-              answer = answer.strip().upper()[:1]
-              answers.append(answer)
-          df["generated_answer"] = answers
-          df.to_csv(output_csv, index=False)
-          print(f"Results saved to {output_csv}")
-
-   .. note::
-      This block reads your CSV containing questions and their respective answer choices, then iterates over each row to generate an answer using the earlier function. The generated answers are saved back into a new column in a new CSV file.
-
-5. Score the Model's Responses
-
-   .. code-block:: python
-
-      def score_multiple_choice(
-          input_csv="gpt_4_answers.csv",
-          output_csv="gpt_4_answers_scored.csv"
-      ):
-          """
-          Loads the CSV with 'generated_answer' and 'expected_answer', and scores the answer as
-          'T' if correct or 'F' if incorrect.
+              
+              # Extract just the letter (A, B, or C)
+              generated = response.upper().strip()
+              if len(generated) > 1:
+                  # If response contains more than just the letter, try to extract the letter
+                  if "A" in generated:
+                      generated = "A"
+                  elif "B" in generated:
+                      generated = "B" 
+                  elif "C" in generated:
+                      generated = "C"
+                  else:
+                      generated = "INVALID"
+              
+              # Check if correct
+              is_correct = generated == expected
+              if is_correct:
+                  correct_count += 1
+              
+              # Store result
+              results.append({
+                  "question": question[:50] + "..." if len(question) > 50 else question,
+                  "model_response": response,
+                  "generated": generated,
+                  "expected": expected,
+                  "correct": is_correct
+              })
           
-          :param str input_csv: Path to the CSV file with the model's answers.
-          :param str output_csv: Path to save the scored CSV.
-          """
-          df = pd.read_csv(input_csv)
-          if "generated_answer" not in df.columns:
-              print("No 'generated_answer' column found. Cannot score.")
-              return
-          if "expected_answer" not in df.columns:
-              print("No 'expected_answer' column found. Cannot score.")
-              return
-          accuracy_scores = []
-          for _, row in df.iterrows():
-              expected = str(row["expected_answer"]).strip().upper()
-              generated = str(row["generated_answer"]).strip().upper()
-              accuracy_scores.append('T' if generated == expected else 'F')
-          df["accuracy_score"] = accuracy_scores
-          df.to_csv(output_csv, index=False)
-          print(f"Scored results saved to {output_csv}")
+          # Calculate accuracy
+          accuracy = correct_count / len(questions_list) if questions_list else 0
+          
+          return {
+              "accuracy": accuracy,
+              "results": results
+          }
 
    .. note::
-      Here, the function compares the generated answer with the expected answer from the CSV, marks each as correct ('T') or incorrect ('F'), and saves the updated scores in a new CSV file.
+      Loops through each question, gets the model's answer, and tracks if it's right or wrong.
 
-6. Run the Inference and Scoring
+6. Main Execution
 
    .. code-block:: python
 
       if __name__ == "__main__":
-          # 1. Run the multiple-choice question inference
-          run_zero_shot(
-              input_csv="questions.csv",
-              output_csv="gpt_4_answers.csv",
-              model_name="gpt-4"
-          )
-          # 2. Score the model responses
-          score_multiple_choice(
-              input_csv="gpt_4_answers.csv",
-              output_csv="gpt_4_answers_scored.csv"
-          )
+          # Run the evaluation
+          evaluation = evaluate_questions(questions, model="gpt-4o")
+          
+          # Print results
+          print(f"\nAccuracy: {evaluation['accuracy']:.2%}")
+          
+          print("\nResults:")
+          for i, r in enumerate(evaluation['results']):
+              print(f"Q{i+1}: {r['question']}")
+              print(f"Response: {r['model_response']}")
+              print(f"Expected: {r['expected']}, Got: {r['generated']}")
+              print("✓" if r['correct'] else "✗")
+              print()
 
    .. note::
-      This main block executes the workflow: it first generates answers for each question, then scores these answers, saving both outputs to CSV files.
+      Runs the evaluation and shows the accuracy along with each question's result.
 
 Running the Tutorial
 --------------------
-1. Make sure ``config.json`` contains your OpenAI API key.
-2. Place your questions in ``questions.csv``.
-3. Install dependencies as listed above.
-4. Save all the code to one file called ``zero_shot.py``.
-5. Run ``python zero_shot.py``.
+1. Create a config.json file with your OpenAI API key
+2. Save the code as ``benchmark_gpt4o_zeroshot.py``
+3. Run with ``python benchmark_gpt4o_zeroshot.py``
 
 Key Takeaways
 -------------
-This tutorial demonstrates how to benchmark an OpenAI model in a zero-shot setting for financial tasks. This tutoirals teaches you how to install dependencies, load API keys, process a CSV file of questions, generate responses, and score those responses. Understanding parameters such as temperature, max_tokens, and system_prompt is important for obtaining accurate results.
+This tutorial demonstrates how to benchmark an OpenAI model in a zero-shot setting for financial tasks. It shows how to load API keys, define questions, generate responses, and evaluate performance.
 
 Notes that you can refer back to later
 --------------------------------------
@@ -260,3 +249,8 @@ Notes that you can refer back to later
 - **max_tokens** determines the maximum length of the output of the model.
 - **system_prompt** determines the behavior/domain context the model should follow.
 - **prompt** is the actual question the user gives to the model. It is also called a user prompt.
+
+Additional Resources
+-------------------
+- `OpenAI API Documentation <https://platform.openai.com/docs/api-reference>`_
+- `GPT-4o Model Information <https://platform.openai.com/docs/models/gpt-4o>`_
