@@ -39,9 +39,7 @@ Demos and AI Safety
 -------------------
 At the center of the illustration, a side-by-side view is presented. Unlike conventional leaderboards that only display scores, this segment offers an online comparison demo. We show multiple actual model outputs with their corresponding performance scores to help users better understand the real-world implications of these metrics, thereby enhancing transparency and promoting AI safety.
 
-ZKP (Zero-Knowledge Proof)
---------------------------
-The lower portion of the Demos and AI Safety introduces the concept of Zero-Knowledge Proof (ZKP). This planned feature aims to protect dataset privacy and prevent fraudulent behaviors such as leaderboard manipulation. With ZKP, we envision a system that can verify model performance without exposing sensitive underlying data, ensuring both integrity and security of the evaluation process.
+**(ZKP) Zero-Knowledge Proof**: The lower portion of the Demos and AI Safety introduces the concept of ZKP. This planned feature aims to protect dataset privacy and prevent fraudulent behaviors such as leaderboard manipulation. With ZKP, we envision a system that can verify model performance without exposing sensitive underlying data, ensuring both integrity and security of the evaluation process.
 
 Financial AI Readiness
 ----------------------
