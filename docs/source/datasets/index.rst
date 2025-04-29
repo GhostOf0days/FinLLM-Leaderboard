@@ -1,10 +1,9 @@
 ==========================
-Datasets
+Financial Datasets
 ==========================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Datasets
 
    fpb
    finqa
