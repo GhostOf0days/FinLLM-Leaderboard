@@ -4,7 +4,6 @@ Tutorials
 
 .. toctree::
    :maxdepth: 2
-   :caption: Tutorials
 
    benchmark_deepseek_zeroshot_guide
    benchmark_deepseek_rag_guide
