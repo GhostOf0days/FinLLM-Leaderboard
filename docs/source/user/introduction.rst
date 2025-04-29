@@ -80,7 +80,7 @@ ZKP Integration
 ------------------
 Our Zero-Knowledge Proof (ZKP) implementation ensures evaluation integrity while protecting sensitive data:
 
-- Privacy-Preserving Verification: Models can prove their performance without exposing training data
+- Privacy-Preserving of Datasets: Models can prove their performance without exposing training data
 - Anti-Gaming Protection: Prevents leaderboard manipulation through cryptographic verification
 - Data Confidentiality: Financial institutions can contribute proprietary datasets without disclosure
 - Transparent Auditing: All evaluations are cryptographically verifiable while maintaining privacy
