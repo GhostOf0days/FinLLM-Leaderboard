@@ -55,7 +55,7 @@ Configuration and Checkpoint Setup
 ------------------------------------
 Many evaluation tasks require specific model checkpoints. For instance, the BART score uses a dedicated checkpoint. Use the snippet below to mount Google Drive and either copy or download the checkpoint file.
 
-.. code-block:: python
+.. code-block:: bash
 
    from google.colab import drive
    import os
@@ -82,7 +82,7 @@ Setting PYTHONPATH and Authentication
 Configure the PYTHONPATH so that Python can locate evaluation modules, then log in to Hugging Face.  
 **Make sure you have access to your Hugging Face Token, since some datasets require requesting access.**
 
-.. code-block:: python
+.. code-block:: bash
 
    %cd /content/PIXIU/src
    %cd /content
@@ -146,7 +146,7 @@ Define your evaluation tasks and set the model parameters. Update the transforme
    - **ES_FNS:** flare_es_fns
    - **ES_TSA:** flare_es_tsa
 
-.. code-block:: python
+.. code-block:: bash
 
    tasks_list = [
        "flare_ner",

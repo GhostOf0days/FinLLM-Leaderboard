@@ -340,7 +340,7 @@ Notes
 - **Max Tokens**: Limits the length of generated responses
 
 Additional Resources
--------------------
+----------------------
 - `Llama 3.2 Model Card <https://huggingface.co/meta-llama/Llama-3.2-3B>`_
 - `FLARE-FIQASA Dataset <https://huggingface.co/datasets/ChanceFocus/flare-fiqasa>`_
 - `Hugging Face Transformers <https://huggingface.co/docs/transformers/index>`_

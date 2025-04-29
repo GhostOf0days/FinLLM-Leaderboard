@@ -259,6 +259,6 @@ Notes
 - **System Prompt** guides the model's behavior and provides context
 
 Additional Resources
--------------------
+----------------------
 - `DeepSeek API Documentation <https://api.deepseek.com/docs>`_
 - `FLARE-FIQASA Dataset <https://huggingface.co/datasets/ChanceFocus/flare-fiqasa>`_ 
