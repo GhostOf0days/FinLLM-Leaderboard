@@ -287,7 +287,7 @@ Running the Tutorial
 4. Run with ``python benchmark_deepseek_rag.py``
 
 Example Output
--------------
+----------------
 
 .. code-block:: text
 
@@ -329,7 +329,7 @@ Notes
 - **Context window** in RAG provides the model with retrieved information, reducing hallucinations
 
 Additional Resources
--------------------
+----------------------
 - `DeepSeek API Documentation <https://api.deepseek.com/docs>`_
 - `FAISS Library <https://github.com/facebookresearch/faiss>`_
 - `OpenAI Embeddings <https://platform.openai.com/docs/guides/embeddings>`_

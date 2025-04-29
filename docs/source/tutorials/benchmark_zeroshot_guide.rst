@@ -312,7 +312,7 @@ Running the Tutorial
 4. Run with ``python benchmark_llama_zeroshot.py``
 
 Example Output
--------------
+----------------
 
 .. code-block:: text
 

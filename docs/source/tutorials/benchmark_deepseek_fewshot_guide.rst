@@ -1,7 +1,7 @@
 .. _deepseek_few_shot:
 
 Benchmark DeepSeek on Financial Sentiment Analysis (few-shot)
-========================================================
+==================================================================
 
 This guide demonstrates how to benchmark DeepSeek models in a **Few-Shot** setting using their API:
 

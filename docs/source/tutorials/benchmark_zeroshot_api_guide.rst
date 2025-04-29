@@ -251,6 +251,6 @@ Notes that you can refer back to later
 - **prompt** is the actual question the user gives to the model. It is also called a user prompt.
 
 Additional Resources
--------------------
+----------------------
 - `OpenAI API Documentation <https://platform.openai.com/docs/api-reference>`_
 - `GPT-4o Model Information <https://platform.openai.com/docs/models/gpt-4o>`_
